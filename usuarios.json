@@ -1,0 +1,24 @@
+{
+    "usuarios": [
+        {
+            "login": "user1",
+            "senha": "123",
+            "nome": "JOAO SILVA"
+        },
+        {
+            "login": "user2",
+            "senha": "123",
+            "nome": "MARIA PEREIRA"
+        },
+        {
+            "login": "user3",
+            "senha": "123",
+            "nome": "PEDRO SANTANA"
+        },
+        {
+            "login": "user4",
+            "senha": "123",
+            "nome": "ROSANA VIEIRA"
+        }
+    ]
+}

@@ -1,0 +1,43 @@
+{
+    "permissoes_usuario": [],
+    "user1": {
+        "usuario_id": "user1",
+        "nome": "JOAO SILVA",
+        "cargo": "admin",
+        "permissoes": {
+            "permissao": [
+                "ler",
+                "escrever",
+                "apagar"
+            ]
+        },
+        "status": "ativo"
+    },
+    "user2": {
+        "usuario_id": "user2",
+        "nome": "MARIA PEREIRA",
+        "cargo": "Sem Cargo",
+        "permissoes": {
+            "permissao": ["ler"]
+        },
+        "status": "ativo"
+    },
+    "user3": {
+        "usuario_id": "user3",
+        "nome": "PEDRO SANTANA",
+        "cargo": "Sem Cargo",
+        "permissoes": {
+            "permissao": []
+        },
+        "status": "ativo"
+    },
+    "user4": {
+        "usuario_id": "user4",
+        "nome": "ROSANA VIEIRA",
+        "cargo": "Sem Cargo",
+        "permissoes": {
+            "permissao": []
+        },
+        "status": "bloqueado"
+    }
+}
