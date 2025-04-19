@@ -198,13 +198,8 @@ def listar_arquivos(permissoes_usuario):
 
 
 def print_mensagem(mensagem, tipo="info"):
-    """
-    Imprime mensagens formatadas em uma caixa personalizada.
-
-    Args:
-        mensagem (str): A mensagem a ser exibida.
-        tipo (str): O tipo de mensagem ("info", "sucesso", "erro").
-    """
+    
+    
     cores = {
         "info": "\033[34m",    # Azul
         "sucesso": "\033[32m", # Verde
@@ -217,8 +212,6 @@ def print_mensagem(mensagem, tipo="info"):
     }
 
     cor = cores.get(tipo, cores["info"])
-    #mensagem_formatada = f"{estilo['inicio']}{cor}[{tipo.upper()}]{estilo['fim']}: {mensagem}{cores['reset']}"
-    #print(mensagem_formatada)
 
     # Versão com caixa
     largura_caixa = len(mensagem) + 6
