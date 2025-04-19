@@ -46,6 +46,7 @@ def processar_string(texto):
     texto_maiusculo = texto_limpo.upper()
     texto_sem_acentos = ''.join(c for c in unicodedata.normalize('NFD', texto_maiusculo)
                                 if unicodedata.category(c) != 'Mn')
+    return texto_sem_acentos
 
 
 def criar_usuario(file_path, nome_usuario, senha):
@@ -106,7 +107,7 @@ def criar_permissoes(file_path, nome_completo, novo_usuario):
 
 def Login():
     dados_permissoes = load_json("permissoes.json")
-    dados_login = load_json("usuarios.json") #carrega o arquivo usuarios.json
+    dados_login = load_json("usuarios.json") 
 
     while True:
 
@@ -122,24 +123,25 @@ def Login():
                 print("Login não encontrado.")
                 continue
             
-            elif dados_permissoes[login_usuario]["status"] == "bloqueado": 
-                print("Conta bloqueada. Entre em contato com o administrador.")
+            elif dados_permissoes[login_usuario]["status"] == "bloqueado":
+                print_mensagem("Conta bloqueada. Entre em contato com o administrador.", tipo="erro")
                 return None, None
             else:
                 tentativas = 0
                 while tentativas < 5:
-                    senha_usuario = input("Digite sua senha: ")
+                    senha_usuario = input("\nDigite sua senha: ")
                    
                     if usuario_encontrado["senha"] == senha_usuario: 
-                        print("\nLogin autenticado!")
-                        print(f"Bem-vindo, {usuario_encontrado['nome']}!")
+                        print_mensagem(f"Bem-vindo(a), {usuario_encontrado['nome']}!", tipo="sucesso")
                         return usuario_encontrado, dados_permissoes[login_usuario]["permissoes"]["permissao"]
                         
                     else:
                         tentativas += 1
-                        print(f"Senha incorreta. Você tem {5 - tentativas} tentativas restantes.")
+                        print_mensagem("Senha incorreta.", tipo="erro")
+                        print (f"Você tem {5 - tentativas} tentativas restantes.")
+                        
                     if tentativas >= 5:
-                        print("Número máximo de tentativas excedido. Conta bloqueada.")
+                        print_mensagem("Número máximo de tentativas atingido. Conta bloqueada.", tipo="erro")
                         dados_permissoes[login_usuario]["status"] = "bloqueado"
                         save_json("permissoes.json", dados_permissoes)
                         break
@@ -150,11 +152,79 @@ def Login():
             break 
 
 
+def listar_arquivos(permissoes_usuario):
+  
+    print("Arquivos disponíveis:")
+    print("\n1. arquivo1.txt")
+    print("2. arquivo2.txt")
+    print("3. arquivo3.txt")
+    print("\n4. Sair") #alterado para opção 4 para sair
+
+    while True:
+        arquivo_escolhido = input("\nDigite o número do arquivo que deseja acessar: ")
+
+        if arquivo_escolhido in ["1", "2", "3"]:
+            print(f"\nVocê escolheu o arquivo {arquivo_escolhido}. O que deseja fazer?")
+            print("1. Ler arquivo")
+            print("2. Escrever arquivo")
+            print("3. Apagar arquivo")
+            print("4. Sair")
+            acao = input("Escolha uma ação: ")
+
+            acao_para_permissao = {
+                "1": "ler",
+                "2": "escrever",
+                "3": "apagar",
+            }
+            permissao_necessaria = acao_para_permissao.get(acao)
+
+            if acao == "4":
+                print("Retornando a lista de arquivos")
+                break #retorna para o loop principal
+            elif permissao_necessaria:
+                if permissao_necessaria in permissoes_usuario:
+                    print_mensagem(f"Acesso permitido para {permissao_necessaria} o arquivo {arquivo_escolhido}.", tipo="sucesso")
+                
+                else:
+                    print(f"Você não possui permissão para {permissao_necessaria} o arquivo.")
+            else:
+                print("Ação inválida.")
+        elif arquivo_escolhido == "4": 
+            print("Saindo do programa")
+            return 
+        else:
+            print("Arquivo inválido.") 
+        
 
 
+def print_mensagem(mensagem, tipo="info"):
+    """
+    Imprime mensagens formatadas em uma caixa personalizada.
 
+    Args:
+        mensagem (str): A mensagem a ser exibida.
+        tipo (str): O tipo de mensagem ("info", "sucesso", "erro").
+    """
+    cores = {
+        "info": "\033[34m",    # Azul
+        "sucesso": "\033[32m", # Verde
+        "erro": "\033[31m",   # Vermelho
+        "reset": "\033[0m"    # Resetar a cor
+    }
+    estilo = {
+        "inicio": "\033[1m", # Negrito
+        "fim": "\033[0m"
+    }
 
+    cor = cores.get(tipo, cores["info"])
+    #mensagem_formatada = f"{estilo['inicio']}{cor}[{tipo.upper()}]{estilo['fim']}: {mensagem}{cores['reset']}"
+    #print(mensagem_formatada)
 
+    # Versão com caixa
+    largura_caixa = len(mensagem) + 6
+    print(f"{estilo['inicio']}{cor}" + "-" * largura_caixa + f"{cores['reset']}")
+    print(f"{estilo['inicio']}{cor}|  {mensagem}  |{cores['reset']}")
+    print(f"{estilo['inicio']}{cor}" + "-" * largura_caixa + f"{cores['reset']}")
 
 
 
@@ -183,33 +253,8 @@ def main():
             login_usuario, permissoes_usuario = Login() 
             while True:
                 if login_usuario:
-                    print("\nO que você deseja fazer?")
-                    print("1. Ler arquivo")
-                    print("2. Escrever arquivo")
-                    print("3. Apagar arquivo")
-                    print("4. Sair")
-                    acao = input("Escolha uma ação: ")
-
-                    acao_para_permissao = {
-                        "1": "ler",
-                        "2": "escrever",
-                        "3": "apagar"
-                    }
-
-                    permissao_necessaria = acao_para_permissao.get(acao)
-
-                    if permissao_necessaria:
-                        if permissao_necessaria in permissoes_usuario:
-                            print("\nAcesso permitido")
-                            print(f"Ação realizada: {permissao_necessaria}.")
-                            continue
-                        else:
-                            print(f"Você não possui permissão para {permissao_necessaria} o arquivo.")
-                    elif acao == "4":
-                        print("\nSaiu!")
-                        break
-                    else:
-                        print("Ação inválida.")
+                    listar_arquivos(permissoes_usuario)
+                    break
                 else:
                     print("Login falhou.")
                     break
@@ -221,17 +266,17 @@ def main():
             novo_usuario = criar_usuario("usuarios.json", nome_completo, senha)
 
             if novo_usuario:
-                print(f"O cadastro de {nome_completo} foi criado com sucesso!")
-                print(f"Seu login é: {novo_usuario}")
+                print_mensagem(f"Usuário {nome_completo} criado com sucesso!", tipo="sucesso")
+                print_mensagem(f"Seu Login para acessar a conta é: {novo_usuario}", tipo="info")
                 nova_permissao = criar_permissoes("permissoes.json", nome_completo, novo_usuario)
                 if nova_permissao:
-                    print("Permissões criadas com sucesso!")
+                    print_mensagem("Permissões criadas com sucesso!", tipo="sucesso")
                 else:
-                    print("Falha ao criar as permissões, contate o administrador.")
+                    print_mensagem("Falha ao criar permissões para o novo usuário.", tipo="erro")
             else:
-                print("Falha ao criar o novo usuário.")
+                print_mensagem("Falha ao criar o novo usuário.", tipo="erro")
         elif escolha == "3":
-            print("Saindo...")
+            print_mensagem("Saindo do programa. Até logo!", tipo="info")
             break
         else:
             print("Opção inválida. Tente novamente.")

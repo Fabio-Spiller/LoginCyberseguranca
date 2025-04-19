@@ -1,5 +1,4 @@
 {
-    "permissoes_usuario": [],
     "user1": {
         "usuario_id": "user1",
         "nome": "JOAO SILVA",
@@ -18,7 +17,9 @@
         "nome": "MARIA PEREIRA",
         "cargo": "Sem Cargo",
         "permissoes": {
-            "permissao": ["ler"]
+            "permissao": [
+                "ler"
+            ]
         },
         "status": "ativo"
     },
@@ -39,5 +40,14 @@
             "permissao": []
         },
         "status": "bloqueado"
+    },
+    "user5": {
+        "usuario_id": "user5",
+        "nome": "MARCIA CORACAO",
+        "cargo": "Sem Cargo",
+        "permissoes": {
+            "permissao": []
+        },
+        "status": "ativo"
     }
 }
