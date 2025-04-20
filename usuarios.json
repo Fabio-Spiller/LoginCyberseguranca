@@ -24,6 +24,11 @@
             "login": "user5",
             "senha": "123",
             "nome": "MARCIA CORACAO"
+        },
+        {
+            "login": "user6",
+            "senha": "123",
+            "nome": "PAULO RACAO"
         }
     ]
 }

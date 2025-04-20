@@ -49,5 +49,14 @@
             "permissao": []
         },
         "status": "ativo"
+    },
+    "user6": {
+        "usuario_id": "user6",
+        "nome": "PAULO RACAO",
+        "cargo": "Sem Cargo",
+        "permissoes": {
+            "permissao": []
+        },
+        "status": "ativo"
     }
 }
