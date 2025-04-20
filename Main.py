@@ -1,23 +1,5 @@
 import json
-import os
 import unicodedata
-
-
-
-# O usuário deve entrar com o seu login e senha​ (autenticação) e ter a funcionalidade de cadastrar usuário
-# Se o usuário estiver autenticado, continue a execução do programa
-# Caso contrário, saia do programa e mostre a mensagem "Usuário ou senha inválidos" na tela
-# Um novo usuário cadastrado não deverá ter permissão para nenhum arquivo
-# A relação usuário/senha deve estar armazenado em um arquivo (TXT, CSV ou JSON)
-# As permissões dos usuários devem estar armazenadas em um arquivo (TXT, CSV ou JSON)
-# O sistema deve perguntar ao usuário qual ação ele deseja realizar (ler, escrever ou apagar) sobre um recurso fictício
-# No contexto do trabalho, o recurso fictício, no caso, não é um arquivo existente no sistema
-# Ele deverá especificar a ação que deseja realizar (ler, escrever, apagar) sobre um recurso
-# O sistema deve perguntar ao usuário qual arquivo ele deseja realizar a operação selecionada no item 2​
-# O sistema deve imprimir na tela caso o acesso foi concedido ou não​
-# “Acesso permitido” caso o acesso foi concedido​
-# Se não, “Acesso negado”
-
 
 def load_json(file_path):
     try:
@@ -120,7 +102,7 @@ def Login():
                     usuario_encontrado = usuario 
             
             if not usuario_encontrado:
-                print("Login não encontrado.")
+                print_mensagem("Login não encontrado. Tente novamente.", tipo="erro")
                 continue
             
             elif dados_permissoes[login_usuario]["status"] == "bloqueado":
@@ -137,8 +119,7 @@ def Login():
                         
                     else:
                         tentativas += 1
-                        print_mensagem("Senha incorreta.", tipo="erro")
-                        print (f"Você tem {5 - tentativas} tentativas restantes.")
+                        print_mensagem(f"Senha incorreta. Você tem {5 - tentativas} tentativas restantes", tipo="erro")
                         
                     if tentativas >= 5:
                         print_mensagem("Número máximo de tentativas atingido. Conta bloqueada.", tipo="erro")
@@ -148,7 +129,7 @@ def Login():
                 else:
                     break 
         else:
-            print("Erro ao carregar dados de usuários.") 
+            print_mensagem("Nenhum usuário encontrado.", tipo="erro")
             break 
 
 
@@ -158,7 +139,7 @@ def listar_arquivos(permissoes_usuario):
     print("\n1. arquivo1.txt")
     print("2. arquivo2.txt")
     print("3. arquivo3.txt")
-    print("\n4. Sair") #alterado para opção 4 para sair
+    print("\n4. Sair") 
 
     while True:
         arquivo_escolhido = input("\nDigite o número do arquivo que deseja acessar: ")
@@ -179,21 +160,21 @@ def listar_arquivos(permissoes_usuario):
             permissao_necessaria = acao_para_permissao.get(acao)
 
             if acao == "4":
-                print("Retornando a lista de arquivos")
-                break #retorna para o loop principal
+                print_mensagem("Saindo do programa", tipo="info")
+                break 
             elif permissao_necessaria:
                 if permissao_necessaria in permissoes_usuario:
                     print_mensagem(f"Acesso permitido para {permissao_necessaria} o arquivo {arquivo_escolhido}.", tipo="sucesso")
                 
                 else:
-                    print(f"Você não possui permissão para {permissao_necessaria} o arquivo.")
+                    print_mensagem(f"Você não possui permissão para {permissao_necessaria} o arquivo.", tipo="erro")
             else:
-                print("Ação inválida.")
+                print_mensagem("Ação inválida. Tente novamente.", tipo="erro")
         elif arquivo_escolhido == "4": 
-            print("Saindo do programa")
+            print_mensagem("Saindo do programa...", tipo="info")
             return 
         else:
-            print("Arquivo inválido.") 
+            print_mensagem("Arquivo inválido.", tipo="erro") 
         
 
 
@@ -207,7 +188,7 @@ def print_mensagem(mensagem, tipo="info"):
         "reset": "\033[0m"    # Resetar a cor
     }
     estilo = {
-        "inicio": "\033[1m", # Negrito
+        "inicio": "\033[1m",
         "fim": "\033[0m"
     }
 
@@ -233,7 +214,7 @@ def print_mensagem(mensagem, tipo="info"):
 
 
 def main():
-    print("\nBem-vindo!")
+    print_mensagem("Bem-vindo(a), escolha sua opção!", tipo="info")
     while True:
         print("\nMenu:")
         print("1. Login")
@@ -249,7 +230,7 @@ def main():
                     listar_arquivos(permissoes_usuario)
                     break
                 else:
-                    print("Login falhou.")
+                    print_mensagem("Login falhou", tipo="erro") 
                     break
        
         elif escolha == "2":
@@ -260,7 +241,7 @@ def main():
 
             if novo_usuario:
                 print_mensagem(f"Usuário {nome_completo} criado com sucesso!", tipo="sucesso")
-                print_mensagem(f"Seu Login para acessar a conta é: {novo_usuario}", tipo="info")
+                print_mensagem(f"Seu Login para acessar a conta é: {novo_usuario}", tipo="sucesso")
                 nova_permissao = criar_permissoes("permissoes.json", nome_completo, novo_usuario)
                 if nova_permissao:
                     print_mensagem("Permissões criadas com sucesso!", tipo="sucesso")
@@ -272,7 +253,7 @@ def main():
             print_mensagem("Saindo do programa. Até logo!", tipo="info")
             break
         else:
-            print("Opção inválida. Tente novamente.")
+            print_mensagem("Opção inválida. Tente novamente.", tipo="erro")
 
 if __name__ == "__main__":
     main()
